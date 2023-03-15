@@ -13,11 +13,13 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.opera.OperaDriver;
 
 import javax.xml.xpath.XPath;
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class DemoqaFormTest {
     private WebDriver driver;
+
     @BeforeEach
     public void setUpDemoQATest() {
         WebDriver driver = null;
@@ -43,68 +45,93 @@ public class DemoqaFormTest {
     }
 
     @Test
-    public void checkFormElementStudentName() throws InterruptedException {
-        WebElement nameElement = WebDriver.findElement(By.xpath("//*[contains(@class, 'table-dark')]//tbody//tr//td[2]"));
-        Assertions.assertTrue(nameElement.isDisplayed());
+    public void checkTitle() {
+        WebElement formTitle = driver.findElement(By.xpath("//*[@class='modal-title h4']"));
+        String formTitleText = formTitle.getText();
+        Assertions.assertEquals("Thanks for submitting the form", formTitleText);
+    }
+
+    @Test
+    public void checkStudentName() throws InterruptedException {
+        WebElement studentName = WebDriver.findElement(By.xpath("//*[contains(@class,'table-dark')]//tbody//tr//td[2]"));
+        Assertions.assertTrue(studentName.isDisplayed());
 
         Thread.sleep(3000);
 
-        String nameElementText = nameElement.getText();
-        Assertions.assertEquals("Student Name", nameElementText);
+        String studentNameText = studentName.getText();
+        Assertions.assertEquals("Maria Ziborova", studentNameText);
     }
 
     @Test
-    public void checkStudentFirstName(){
-        WebElement checkFirstName = WebDriver.findElement(By.xpath("(//*[@id='firstName']"));
-        String lastName = checkFirstName.getText();
-        Assertions.assertEquals("Maria", lastName);
-    }
-    @Test
-    public void checkStudentLastName(){
-        WebElement checkLastName = WebDriver.findElement(By.xpath("(//*[@id='lastName']"));
-        String lastName = checkLastName.getText();
-        Assertions.assertEquals("Ziborova", lastName);
+    public void checkStudentEmail() throws InterruptedException {
+        WebElement checkStudentEmail = WebDriver.findElement(By.xpath("//*[contains(@class,'table-dark')]//tbody//tr[2]//td[2]"));
+        String studentEmailText = checkStudentEmail.getText();
+        Assertions.assertEquals("m.s.ziborova@gmail.com", studentEmailText);
+        Thread.sleep(5000);
     }
 
     @Test
-    public void checkStudentGender() {
-        WebElement checkboxesGender = WebDriver.findElement(By.xpath("(//*[@type='radio'])[2]"));
-        String genderText = checkboxesGender.getText();
-        Assertions.assertEquals("Female", genderText);
+    public void checkGender() {
+        WebElement checkGender = WebDriver.findElement(By.xpath("//*[contains(@class,'table-dark')]//tbody//tr[3]//td[2]"));
+        Assertions.assertTrue(checkGender.isDisplayed());
     }
 
     @Test
     public void checkMobileNumber() {
-        WebElement mobileNumber = WebDriver.findElement(By.xpath("//*[@placeholder='Mobile Number']"));
-        Assertions.assertTrue(mobileNumber.isDisplayed());
+        WebElement checkMobile = WebDriver.findElement(By.xpath("//td[text()=\"Mobile\"]//..//td[2]"));
+        Assertions.assertTrue(checkMobile.isDisplayed());
     }
 
     @Test
-    public void checkSelectHobbies() {
-        WebElement selectHobby = WebDriver.findElement(By.xpath("//*[@id='hobbiesWrapper']//div[2]//div[1]"));
-        Assertions.assertTrue(selectHobby.isSelected());
+    public void checkDateOfBirth() {
+        WebElement checkDateOfBirth = WebDriver.findElement(By.xpath("//td[normalize-space()='Date of Birth']//..//td[2]"));
+        String dateOfBirthText = checkDateOfBirth.getText();
+        Assertions.assertEquals("16 October, 1985", dateOfBirthText);
     }
+
+    @Test
+    public void checkSubjects() {
+        WebElement checkSubjects = WebDriver.findElement(By.xpath("//td[normalize-space()='Subjects']//..//td[2]"));
+        String subjectsText = checkSubjects.getText();
+        Assertions.assertEquals("Computer Sience", subjectsText);
+    }
+
     @Test
     public void checkHobbies() {
-        WebElement hobbiesForm = WebDriver.findElement(By.xpath("//*[@id='hobbiesWrapper']"));
-        List<WebElement> list = hobbiesForm.findElement(By.xpath("//*[@type='checkbox']"));
-        for (WebElement item: list) {
-            Assertions.assertEquals("checkbox", item.getAttribute("type"));
-        }
+        WebElement checkHobbies = WebDriver.findElement(By.xpath("//td[text()='Hobbies']//..//td[2]"));
+        String hobbiesText = checkHobbies.getText();
+        Assertions.assertEquals("Sports", hobbiesText);
     }
-//*[@id = 'hobbiesWrapper']
-    //*[contains(@class, 'month-container')]
-    //*[@id = 'hobbiesWrapper']//div[2]//div[1]
-    //*[@placeholder = 'Current Address']
-    //*[@id='state']
-    //*[@id='city']
 
     @Test
-    public void formSubmission() {
-        WebElement submitButton = WebDriver.findElement(By.xpath("//*[@id='submit']")).click();
-        WebElement formTitle = driver.findElement(By.xpath("//*[contains(text(), 'Thanks')]"));
-        String formTitleText = formTitle.getText();
-        Assertions.assertEquals("Thanks for submitting the form", formTitleText);
+    public void checkImageUpload() {
+        WebElement checkImageUpload = WebDriver.findElement(By.xpath("//td[text()='Picture']//..//td[2]"));
+        Assertions.assertTrue(checkImageUpload.isDisplayed());
+        File fileUploadImage = new File("Image.png");
+        System.out.println(fileUploadImage.getAbsolutePath());
+        Thread.sleep(5000);
+    }
+
+    @Test
+    public void checkAddress() {
+        WebElement checkAddress = WebDriver.findElement(By.xpath("//td[normalize-space()='Address']//..//td[2]"));
+        String addressText = checkAddress.getText();
+        Assertions.assertEquals("Sakko i Vancetti, 77", addressText);
+    }
+
+    @Test
+    public void checkStateAndCity() {
+        WebElement checkStateAndCity = WebDriver.findElement(By.xpath("//td[normalize-space()='State and City']//..//td[2]"));
+        String stateAndCityText = checkStateAndCity.getText();
+        Assertions.assertEquals("NCR Delhi", stateAndCityText);
+    }
+
+    @Test
+    public void checkFormClose() {
+        driver.findElement(By.xpath("//*[@id='closeLargeModal']")).click();
+        WebElement formCloseTitle = driver.findElement(By.cssSelector(".main-header"));
+        String formCloseTitleText = formCloseTitle.getText();
+        Assertions.assertEquals("Practice Form", formCloseTitleText);
     }
 
     @AfterEach

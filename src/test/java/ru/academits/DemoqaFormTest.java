@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.support.ui.Select;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -50,19 +50,43 @@ public class DemoqaFormTest {
         String formTitleText = formTitle.getText();
         Assertions.assertEquals("Student Registration Form", formTitleText);
 
-        driver.findElement(By.cssSelector("#firstName")).sendKeys("Maria");
-        driver.findElement(By.cssSelector("#lastName")).sendKeys("Ziborova");
-        driver.findElement(By.cssSelector("#userEmail")).sendKeys("m.s.ziborova@gmail.com");
+        String firstName = "Maria";
+        String lastName = "Ziborova";
+        String userEmail = "m.s.ziborova@gmail.com";
+        String userNumber = "9631234567";
+        String dayOfBirth = "16";
+        String monthOfBirth = "October";
+        String yearOfBirth = "1985";
+        String currentAddress = "Sakko i Vancetti, 77";
+        String subject = "Computer Sience";
+        String hobbies = "Sports";
+        String state = "NCR";
+        String city = "Delhi";
+
+        driver.findElement(By.cssSelector("#firstName")).sendKeys(firstName);
+        driver.findElement(By.cssSelector("#lastName")).sendKeys(lastName);
+        driver.findElement(By.cssSelector("#userEmail")).sendKeys(userEmail);
         driver.findElement(By.cssSelector("#gender-radio-2")).click();
-        driver.findElement(By.cssSelector("#userNumber")).sendKeys("9631234567");
+        driver.findElement(By.cssSelector("#userNumber")).sendKeys(userNumber);
 
         driver.findElement(By.cssSelector("#dateOfBirthInput")).click();
         WebElement calendar = driver.findElement(By.xpath("//*[contains(@class,'month-container')]"));
-        calendar.findElement(By.xpath("//*[@value='9']"));
-        calendar.findElement(By.xpath("//*[@value='1985']"));
-        calendar.findElement(By.xpath("//*[contains(@class,'day--016')]"));
 
-        driver.findElement(By.xpath("(//*[contains(@class, 'subjects-auto-complete')])[1]")).sendKeys("Computer Sience");
+        calendar.findElement(By.xpath("//*[contains(@class, 'year-select')]")).click();
+        WebElement year = calendar.findElement(By.name(yearOfBirth));
+        Select selectYear = new Select(year);
+        selectYear.selectByValue(yearOfBirth);
+
+        calendar.findElement(By.xpath("//*[contains(@class, 'month-select')]")).click();
+        WebElement month = calendar.findElement(By.name(monthOfBirth));
+        Select selectMonth = new Select(month);
+        selectMonth.selectByValue(monthOfBirth);
+
+        WebElement day = calendar.findElement(By.name(dayOfBirth));
+        Select selectDay = new Select(day);
+        selectDay.selectByValue(dayOfBirth);
+
+        driver.findElement(By.xpath("(//*[contains(@class, 'subjects-auto-complete')])[1]")).sendKeys(subject);
 
         driver.findElement(By.cssSelector("#hobbies-checkbox-1")).click();
 
@@ -70,11 +94,15 @@ public class DemoqaFormTest {
         File fileUploadImage = new File("Image.png");
         System.out.println(fileUploadImage.getAbsolutePath());
 
-        driver.findElement(By.xpath("//*[@placeholder='Current Address']")).sendKeys("Sakko i Vancetti, 77");
+        driver.findElement(By.xpath("//*[@placeholder='Current Address']")).sendKeys(currentAddress);
 
-        driver.findElement(By.xpath("(//*[@aria-hidden='true'])[1]")).sendKeys(Keys.RETURN);
+        WebElement studentsState = driver.findElement(By.xpath("(//*[@aria-hidden='true'])[1]"));
+        Select selectState = new Select(studentsState);
+        selectState.selectByValue(selectState.toString());
 
-        driver.findElement(By.xpath("(//*[@aria-hidden='true'])[3]")).sendKeys(Keys.RETURN);
+        WebElement studentsCity = driver.findElement(By.xpath("(//*[@aria-hidden='true'])[3]"));
+        Select selectCity = new Select(studentsCity);
+        selectState.selectByValue(selectCity.toString());
 
         driver.findElement(By.xpath("//*[@type='submit']")).click();
         Thread.sleep(5000);
@@ -85,11 +113,11 @@ public class DemoqaFormTest {
 
         WebElement checkStudentName = driver.findElement(By.xpath("//*[contains(@class,'table-dark')]//tbody//tr//td[2]"));
         String studentNameText = checkStudentName.getText();
-        Assertions.assertEquals("Maria Ziborova", studentNameText);
+        Assertions.assertEquals(firstName + lastName, studentNameText);
 
         WebElement checkStudentEmail = driver.findElement(By.xpath("//*[contains(@class,'table-dark')]//tbody//tr[2]//td[2]"));
         String studentEmailText = checkStudentEmail.getText();
-        Assertions.assertEquals("m.s.ziborova@gmail.com", studentEmailText);
+        Assertions.assertEquals(userEmail, studentEmailText);
 
         WebElement checkGender = driver.findElement(By.xpath("//*[contains(@class,'table-dark')]//tbody//tr[3]//td[2]"));
         Assertions.assertTrue(checkGender.isDisplayed());
@@ -99,26 +127,26 @@ public class DemoqaFormTest {
 
         WebElement checkDateOfBirth = driver.findElement(By.xpath("//td[normalize-space()='Date of Birth']//..//td[2]"));
         String dateOfBirthText = checkDateOfBirth.getText();
-        Assertions.assertEquals("16 October, 1985", dateOfBirthText);
+        Assertions.assertEquals(dayOfBirth + monthOfBirth + "," + yearOfBirth, dateOfBirthText);
 
         WebElement checkSubjects = driver.findElement(By.xpath("//td[normalize-space()='Subjects']//..//td[2]"));
         String subjectsText = checkSubjects.getText();
-        Assertions.assertEquals("Computer Sience", subjectsText);
+        Assertions.assertEquals(subject, subjectsText);
 
         WebElement checkHobbies = driver.findElement(By.xpath("//td[text()='Hobbies']//..//td[2]"));
         String hobbiesText = checkHobbies.getText();
-        Assertions.assertEquals("Sports", hobbiesText);
+        Assertions.assertEquals(hobbies, hobbiesText);
 
         WebElement checkImageUpload = driver.findElement(By.xpath("//td[text()='Picture']//..//td[2]"));
         Assertions.assertTrue(checkImageUpload.isDisplayed());
 
         WebElement checkAddress = driver.findElement(By.xpath("//td[normalize-space()='Address']//..//td[2]"));
         String addressText = checkAddress.getText();
-        Assertions.assertEquals("Sakko i Vancetti, 77", addressText);
+        Assertions.assertEquals(currentAddress, addressText);
 
         WebElement checkStateAndCity = driver.findElement(By.xpath("//td[normalize-space()='State and City']//..//td[2]"));
         String stateAndCityText = checkStateAndCity.getText();
-        Assertions.assertEquals("NCR Delhi", stateAndCityText);
+        Assertions.assertEquals(state + city, stateAndCityText);
 
         driver.findElement(By.xpath("//*[@id='closeLargeModal']")).click();
         Thread.sleep(5000);
@@ -130,26 +158,6 @@ public class DemoqaFormTest {
 
     @AfterEach
     public void tearDownDemoQATest() {
-        WebDriver driver = null;
-
-        String browser = System.getProperty("browser");
-        if (browser.equals("chrome")) {
-            WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver();
-        } else if (browser.equals("opera")) {
-            WebDriverManager.operadriver().setup();
-            driver = new OperaDriver();
-        } else if (browser.equals("edge")) {
-            WebDriverManager.edgedriver().setup();
-            driver = new EdgeDriver();
-        } else {
-            WebDriverManager.edgedriver().setup();
-            driver = new EdgeDriver();
-        }
-
-        System.out.println(("Current url = ") + driver.getCurrentUrl());
-        Assertions.assertEquals("https://demoqa.com/automation-practice-form/", driver.getCurrentUrl());
-
         driver.quit();
     }
 

@@ -57,9 +57,9 @@ public class DemoqaFormTest {
         String dayOfBirth = "16";
         String monthOfBirth = "October";
         String yearOfBirth = "1985";
-        String currentAddress = "Sakko i Vancetti, 77";
         String subject = "Computer Sience";
         String hobbies = "Sports";
+        String currentAddress = "Sakko i Vancetti, 77";
         String state = "NCR";
         String city = "Delhi";
 
